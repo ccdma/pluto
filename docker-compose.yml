@@ -11,4 +11,6 @@ services:
       - ..:/home/user/workdir
     network_mode: "host"
     environment:
+      - USER_ID=1000
+      - GROUP_ID=1000
       - DISPLAY=$DISPLAY
