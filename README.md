@@ -5,7 +5,7 @@ C/Python bindings for ad.
 In this directory, run below command
 
 ```
-$ docker build --build-arg UID=$(id -u) --build-arg GID=$(id -g) -t pluto .
+$ docker build -t pluto .
 ```
 
 ```
@@ -14,18 +14,14 @@ $ docker run --privileged \
     -v /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket \
     --net host -e DISPLAY=$DISPLAY -v $HOME/.Xauthority:/home/user/.Xauthority:ro \
     --rm -it \
+    -e USER_ID=`id -u` -e GROUP_ID=`id -g` \
     -v `pwd`:/home/user/workdir \
     pluto bash
 ```
 
-
-`dbus`や`avahi`のマウントは`iio_info`などがデバイスの検索をする場合に必要。`--privilleged`により、ホストの`/dev`以下をコンテナから参照できる。
+以下は`dbus`や`avahi`のマウントは`iio_info`などがデバイスの検索をする場合に必要。`--privilleged`により、ホストの`/dev`以下をコンテナから参照できる。
 ```
-$ docker run --privileged \
-    -v /var/run/dbus:/var/run/dbus \
-    -v /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket \
-    --rm -it \
-    pluto bash
+--privileged -v /var/run/dbus:/var/run/dbus -v /var/run/avahi-daemon/socket:/var/run/avahi-daemon/socket
 ```
 
 <!-- デバイスごとにマウントする場合は以下の通り。
