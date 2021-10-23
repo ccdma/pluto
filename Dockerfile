@@ -32,7 +32,7 @@ RUN \
     apt-get clean 
 
 # install some tools
-RUN apt-get install gosu cu -y && apt-get clean 
+RUN apt-get install gosu cu sudo -y && apt-get clean 
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod 700 /entrypoint.sh
