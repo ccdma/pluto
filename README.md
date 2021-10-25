@@ -62,6 +62,9 @@ import subprocess
 subprocess.run(R'iio_info -S | grep -E "\\[usb:.*\\]" | sed -e "s/.*\[\(usb:.*\)\].*/\1/"', shell=True)
 ```
 
+### libiio
+- [binary](https://github.com/analogdevicesinc/libiio/releases/)
+
 ### シリアル通信
 [公式ページ](https://wiki.analog.com/university/tools/pluto/drivers/linux)にあるkermitはサポートされていない。`cu`コマンドで代替できる。
 ```
