@@ -1,0 +1,6 @@
+{
+    "dockerComposeFile": ["../docker-compose.yml"],
+    "service": "pluto",
+    "workspaceFolder": "/app",
+    "remoteUser": "user"
+}
