@@ -4,7 +4,7 @@
 USERHOME=/home/user
 USERNAME=user
 
-echo "Starting with UID : ${USER_ID:=1001}, GID: ${GROUP_ID:=1001}"
+echo "Starting with UID : ${USER_ID:=1000}, GID: ${GROUP_ID:=1000}"
 groupadd ${USERNAME} -g ${GROUP_ID} && \
 [ -d ${USERHOME} ] && chown ${USER_ID} ${USERHOME}
 useradd -u ${USER_ID} -g ${GROUP_ID} -d ${USERHOME} -m -s /bin/bash -G sudo ${USERNAME}
