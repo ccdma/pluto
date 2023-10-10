@@ -39,7 +39,7 @@ RUN \
 # install python iio with other library
 # https://wiki.analog.com/resources/tools-software/linux-software/pyadi-iio
 RUN \
-    pip install pylibiio pyadi-iio matplotlib numpy scipy wave scikit-commpy && \
+    pip install pylibiio pyadi-iio matplotlib numpy numba scipy wave scikit-commpy && \
     apt-get install python3-tk -y && \
     apt-get clean 
 

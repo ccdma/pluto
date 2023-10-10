@@ -1,12 +1,9 @@
 from madi.locate import get_devices, find_device
+from madi.operate import destroy
 from madi.static import *
 import adi, csv
 import numpy as np
 from time import sleep
-
-def destroy(sdr: adi.Pluto):
-    sdr.tx_destroy_buffer()
-    sdr.rx_destroy_buffer()
 
 def save_csv(filename: str, arr: np.ndarray):
     with open(filename, "w+") as f:
@@ -28,3 +25,4 @@ destroy(sdr)
 sleep(1.0)
 samplings = np.array(sdr.rx())
 save_csv("a.csv", samplings)
+destroy(sdr)
