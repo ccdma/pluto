@@ -1,1 +1,6 @@
 .env
+*.pyc
+*.csv
+*.png
+tmp/*
+tmp*.py

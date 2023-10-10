@@ -8,7 +8,7 @@ RUN apt-get update
 ENV DEBIAN_FRONTEND=noninteractive
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-WORKDIR /app 
+WORKDIR /inst 
 
 # https://github.com/analogdevicesinc/libiio/blob/master/README_BUILD.md
 RUN \
@@ -28,7 +28,7 @@ RUN \
     make install
 RUN \
     apt-get install python3-setuptools -y && \
-    git clone https://github.com/analogdevicesinc/libiio.git && \
+    git clone https://github.com/analogdevicesinc/libiio.git -b v0.25 && \
     cd libiio && \
     mkdir build && \
     cd build && \
