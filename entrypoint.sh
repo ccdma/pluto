@@ -1,21 +1,19 @@
 #!/bin/bash
 
-# create user
-USERHOME=/home/user
 USERNAME=user
+USERHOME=/home/${USERNAME}
 
-echo "Starting with UID : ${USER_ID:=1000}, GID: ${GROUP_ID:=1000}"
-groupadd ${USERNAME} -g ${GROUP_ID} && \
-[ -d ${USERHOME} ] && chown ${USER_ID} ${USERHOME}
-useradd -u ${USER_ID} -g ${GROUP_ID} -d ${USERHOME} -m -s /bin/bash -G sudo ${USERNAME}
+function createsu () {
+    groupadd ${USERNAME} -g ${GROUP_ID} && \
+    [ -d ${USERHOME} ] && chown ${USER_ID} ${USERHOME}
+    useradd -u ${USER_ID} -g ${GROUP_ID} -d ${USERHOME} -m -s /bin/bash -G sudo ${USERNAME}
 
-echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
-# sudo時にPATHを引き継ぐ
-sed -i '/Defaults.*secure_path.*/d' /etc/sudoers && \
-echo 'Defaults  env_keep += "PATH"' >> /etc/sudoers
+    echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers && \
+    # sudo時にPATHを引き継ぐ
+    sed -i '/Defaults.*secure_path.*/d' /etc/sudoers && \
+    echo 'Defaults  env_keep += "PATH"' >> /etc/sudoers
+}
 
-if [ "$1" != "" ]; then
-    exec /usr/sbin/gosu ${USERNAME} "$@"
-else
-    exec /usr/sbin/gosu ${USERNAME} bash
-fi
+id -u ${USERNAME} &>/dev/null || createsu
+
+exec /usr/sbin/gosu ${USERNAME} "$@"

@@ -8,7 +8,7 @@ RUN apt-get update
 ENV DEBIAN_FRONTEND=noninteractive
 RUN ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
 
-WORKDIR /inst 
+WORKDIR /setup 
 
 # https://github.com/analogdevicesinc/libiio/blob/master/README_BUILD.md
 RUN \
@@ -48,4 +48,5 @@ RUN apt-get install gosu cu sudo -y && apt-get clean
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod 700 /entrypoint.sh
+WORKDIR /app
 ENTRYPOINT ["/entrypoint.sh"]
