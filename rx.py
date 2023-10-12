@@ -5,6 +5,8 @@ import adi, csv
 import numpy as np
 from time import sleep
 
+OUT_FILE = f"a.csv"
+
 def save_csv(filename: str, arr: np.ndarray):
     with open(filename, "w+") as f:
         c = csv.writer(f)
@@ -24,5 +26,5 @@ destroy(sdr)
 
 sleep(1.0)
 samplings = np.array(sdr.rx())
-save_csv("a.csv", samplings)
+save_csv(OUT_FILE, samplings)
 destroy(sdr)
