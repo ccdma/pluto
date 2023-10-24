@@ -37,7 +37,7 @@ fig, axes = plt.subplots(nrows=2, ncols=2, squeeze=False)
 axes = np.ravel(axes)
 size = 100
 for i, ax in enumerate(axes):
-    start = (i+1)*1000
+    start = (i+1)*1523
     pdata = data[start:start+size]
     ax.scatter(pdata.real, pdata.imag, s=0.4)
     ax.plot(pdata.real, pdata.imag, lw=0.2)
