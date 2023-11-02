@@ -12,8 +12,8 @@ DEVICES = get_devices()
 BUFFER_SIZE = int(1*MHz)
 
 sdrs = [
-    adi.Pluto(find_device("f24", DEVICES).uri_usb),
-    # adi.Pluto(find_device("9ce", DEVICES).uri_usb),
+    # adi.Pluto(find_device("f24", DEVICES).uri_usb),
+    adi.Pluto(find_device("9ce", DEVICES).uri_usb),
 ]
 
 for sdr in sdrs:
@@ -23,10 +23,10 @@ for sdr in sdrs:
     sdr.tx_cyclic_buffer = True
     destroy(sdr)
 
-print("start sending")
-
-sdrs[0].tx(primitive_root_code(1019, 2, 1)*1024*2)
+# primitive_root_code(1019, 2, 1)*1024*2
+sdrs[0].tx(np.sin(np.linspace(0, 2*np.pi, 1024)) + 1j*np.cos(np.linspace(0, 2*np.pi, 1024))*1024*2)
 # sdrs[1].tx(primitive_root_code(53, 2, 2)*10)
+print("start sending")
 
 sleep(8.0)
 for sdr in sdrs:
