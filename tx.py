@@ -9,7 +9,7 @@ from time import sleep
 np.random.seed(1)
 
 DEVICES = get_devices()
-BUFFER_SIZE = int(1*MHz)
+BUFFER_SIZE = int(1*M)
 
 sdrs = [
     # adi.Pluto(find_device("f24", DEVICES).uri_usb),
@@ -23,7 +23,8 @@ for sdr in sdrs:
     sdr.tx_cyclic_buffer = True
     destroy(sdr)
 
-code = np.sin(np.linspace(0, 2*np.pi, 128)) + 1j*np.cos(np.linspace(0, 2*np.pi, 128))
+leng = 1024
+code = np.sin(np.linspace(0, 2*np.pi, leng)) + 1j*np.cos(np.linspace(0, 2*np.pi, leng))
 # code = primitive_root_code(1019, 2, 1)
 # code = primitive_root_code(53, 2, 2)
 code = code * 1024 * 2

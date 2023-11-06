@@ -14,7 +14,7 @@ def save_csv(filename: str, arr: np.ndarray):
         c.writerow(arr.imag)
 
 DEVICES = get_devices()
-BUFFER_SIZE = int(1*MHz)
+BUFFER_SIZE = int(1*M)
 
 sdr = adi.Pluto(find_device("d87", DEVICES).uri_usb)
 

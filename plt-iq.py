@@ -9,7 +9,8 @@ def args_mul(arr: np.ndarray, n: int):
     divarg = np.mod(arg2 - arg1 + np.pi, 2*np.pi) - np.pi
     return np.mean(np.abs(divarg))
 
-IN_FILE = f"a.csv"
+IN_FILE = f"t512-sin.csv"
+# IN_FILE = f"a.csv"
 OUT_FILE = f"{IN_FILE}.png"
 
 dump = np.loadtxt(IN_FILE, delimiter=',')
@@ -39,16 +40,21 @@ fig.tight_layout()
 # fig.savefig(OUT_FILE)
 
 # plot iq
-fig, axes = plt.subplots(nrows=2, ncols=2, squeeze=False)
+fig, axes = plt.subplots(nrows=2, ncols=4, squeeze=False)
 axes = np.ravel(axes)
-size = 128
+size = 512
 for i, ax in enumerate(axes):
-    start = (i+1)*1000
+    start = (i+1)*400
     pdata = data[start:start+size]
     ax.scatter(pdata.real, pdata.imag, s=0.4)
-    ax.plot(pdata.real, pdata.imag, lw=0.2)
+    ax.plot(pdata.real, pdata.imag, lw=0.2, color='darkblue')
+    # ax.plot([pdata[0].real, 0, pdata[-1].real], [pdata[0].imag, 0, pdata[-1].imag], lw=2.0, color='red')
+    # ax.text(-0.3, 0.4, f"{np.round(np.abs(np.angle(pdata[0])-np.angle(pdata[-1])), 4)}\n[rad]")
     ax.set_title(f"{start}-{start+size}")
     ax.set_aspect('equal')
-fig.suptitle(f"IQ plot of sine wave")
+fig.suptitle(f"""
+IQ plot of sine wave
+(t=512, sample_rate={hprint(DEFAULT_SAMPLE_RATE)}, lo={hprint(DEFAULT_RX_LO)}, bw={hprint(DEFAULT_RX_BW)})
+""".strip())
 fig.tight_layout()
 fig.savefig(OUT_FILE)

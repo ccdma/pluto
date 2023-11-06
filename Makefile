@@ -1,0 +1,2 @@
+rmpng:
+	rm -f *.png
