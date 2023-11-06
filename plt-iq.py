@@ -36,12 +36,12 @@ ax.set_xlabel("chunck")
 ax.set_ylabel("argument [rad]")
 
 fig.tight_layout()
-fig.savefig(OUT_FILE)
+# fig.savefig(OUT_FILE)
 
 # plot iq
 fig, axes = plt.subplots(nrows=2, ncols=2, squeeze=False)
 axes = np.ravel(axes)
-size = 1024
+size = 128
 for i, ax in enumerate(axes):
     start = (i+1)*1000
     pdata = data[start:start+size]
@@ -49,6 +49,6 @@ for i, ax in enumerate(axes):
     ax.plot(pdata.real, pdata.imag, lw=0.2)
     ax.set_title(f"{start}-{start+size}")
     ax.set_aspect('equal')
-fig.suptitle(f"IQ plot of sine wave \n(T=1024, SAMPLE_RATE=5M, LO=923MHz,BANDWIDTH=10Mz)")
+fig.suptitle(f"IQ plot of sine wave")
 fig.tight_layout()
 fig.savefig(OUT_FILE)

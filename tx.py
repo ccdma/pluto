@@ -23,9 +23,13 @@ for sdr in sdrs:
     sdr.tx_cyclic_buffer = True
     destroy(sdr)
 
-# primitive_root_code(1019, 2, 1)*1024*2
-sdrs[0].tx(np.sin(np.linspace(0, 2*np.pi, 1024)) + 1j*np.cos(np.linspace(0, 2*np.pi, 1024))*1024*2)
-# sdrs[1].tx(primitive_root_code(53, 2, 2)*10)
+code = np.sin(np.linspace(0, 2*np.pi, 128)) + 1j*np.cos(np.linspace(0, 2*np.pi, 128))
+# code = primitive_root_code(1019, 2, 1)
+# code = primitive_root_code(53, 2, 2)
+code = code * 1024 * 2
+
+sdrs[0].tx(code)
+
 print("start sending")
 
 sleep(8.0)
