@@ -9,7 +9,7 @@ def args_mul(arr: np.ndarray, n: int):
     divarg = np.mod(arg2 - arg1 + np.pi, 2*np.pi) - np.pi
     return np.mean(np.abs(divarg))
 
-IN_FILE = f"t512-sin.csv"
+IN_FILE = f"t128-sin.csv"
 # IN_FILE = f"a.csv"
 OUT_FILE = f"{IN_FILE}.png"
 
@@ -40,9 +40,9 @@ fig.tight_layout()
 # fig.savefig(OUT_FILE)
 
 # plot iq
-fig, axes = plt.subplots(nrows=2, ncols=4, squeeze=False)
+fig, axes = plt.subplots(nrows=2, ncols=2, squeeze=False)
 axes = np.ravel(axes)
-size = 512
+size = 128
 for i, ax in enumerate(axes):
     start = (i+1)*400
     pdata = data[start:start+size]
@@ -50,6 +50,11 @@ for i, ax in enumerate(axes):
     ax.plot(pdata.real, pdata.imag, lw=0.2, color='darkblue')
     # ax.plot([pdata[0].real, 0, pdata[-1].real], [pdata[0].imag, 0, pdata[-1].imag], lw=2.0, color='red')
     # ax.text(-0.3, 0.4, f"{np.round(np.abs(np.angle(pdata[0])-np.angle(pdata[-1])), 4)}\n[rad]")
+
+    center = np.mean(pdata)
+    ax.scatter(center.real, center.imag, s=15, color='red', marker='x')
+    ax.text(-0.3, 0.4, f"{np.round(center, 2)}", size=8)
+    
     ax.set_title(f"{start}-{start+size}")
     ax.set_aspect('equal')
 fig.suptitle(f"""
