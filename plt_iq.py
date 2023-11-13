@@ -3,10 +3,10 @@ import numpy as np
 from madi import code, algo
 from madi.static import *
 
-T = 53
+T = 512
 
 IN_FILE = f"t{T}-sin.csv"
-IN_FILE = f"t{T}-pri.csv"
+# IN_FILE = f"t{T}-pri.csv"
 # IN_FILE = f"a.csv"
 
 OUT_FILE = f"{IN_FILE}.png"
@@ -33,41 +33,39 @@ data = data[1000:11000]
 LAG = 2*np.pi - 0.005510028883016813
 data = algo.fix_rf_rotate(data, LAG)
 
-def args_mul(arr: np.ndarray, n: int):
-    arg1 = np.angle(arr[:-1])*n
-    arg2 = np.angle(arr[1:])
-    divarg = algo.cmod(arg2 - arg1)
-    return np.mean(divarg)
-
+# 原始根符号
+# t=n-1から算出したt=nと、実際のt=nにおける受信符号の差
 fig, ax = plt.subplots()
-argplt = []
-for arr in np.split(data, 100):
-    argplt.append(args_mul(arr, n=2))
-ax.plot(argplt, marker='o', markersize=5)
-ax.set_title("argument difference for x_1 - x_0*2 [rad]")
-ax.set_xlabel("chunck")
-ax.set_ylabel("argument [rad]")
+Q = 2
+# pdata = 0となることが期待される
+pdata = algo.cmod(np.angle(data)[1:] - np.angle(data)[:-1]*Q)[:1000]
+ax.plot(pdata, marker='o', markersize=3)
+ax.grid(True, axis='y')
+ax.set_xlabel("time [1sec/sample_rate]")
+ax.set_ylabel("code[t+1] - code[t]*{Q} [rad]")
+fig.suptitle(f"""
+Argument difference of primitive root code
+(t={T}, {RF_PARAM_DESC})
+""".strip())
 figconf(fig)
 fig.savefig(OUT_FILE)
 
-
-# fig, ax = plt.subplots()
-# pdata = algo.cmod(np.angle(data)[1:] - np.angle(data)[:-1])[:8000]
-# ax.plot(pdata)
-# ax.grid(True, axis='y')
-# ax.set_xlabel("time [1/sample_rate]")
-# ax.set_ylabel("code[t+1] - code[t] [rad]")
-# fig.suptitle(f"""
-# Argument difference of sine wave
-# (t={T}, {RF_PARAM_DESC})
-# """.strip())
-# figconf(fig)
-# fig.savefig(OUT_FILE)
-# average = np.mean(pdata)
-# expected = np.pi*2/T
-# print(f"average={average}[rad]")
-# print(f"expected={expected}[rad]")
-# print(- average - expected)
+# sine wave
+# t=n-1から算出したt=nと、実際のt=nにおける受信符号の差
+fig, ax = plt.subplots()
+# pdata = 0となることが期待される
+pdata = algo.cmod(np.angle(data)[1:] - np.angle(data)[:-1] + np.pi*2/T)[:1000]
+print(f"average={np.mean(pdata)}[rad]")
+ax.plot(pdata, marker='o', markersize=3)
+ax.grid(True, axis='y')
+ax.set_xlabel("time [1sec/sample_rate]")
+ax.set_ylabel("code[t+1] - code[t] + 2pi/T [rad]")
+fig.suptitle(f"""
+Argument difference of sine wave
+(t={T}, {RF_PARAM_DESC})
+""".strip())
+figconf(fig)
+fig.savefig(OUT_FILE)
 
 
 fig, axes = plt.subplots(nrows=2, ncols=2, squeeze=False)
@@ -97,4 +95,4 @@ IQ plot of sine wave
 (t={T}, {RF_PARAM_DESC})
 """.strip())
 figconf(fig)
-# fig.savefig(OUT_FILE)
+fig.savefig(OUT_FILE)
