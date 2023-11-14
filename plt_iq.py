@@ -3,10 +3,10 @@ import numpy as np
 from madi import code, algo
 from madi.static import *
 
-T = 512
+T = 269
 
 IN_FILE = f"t{T}-sin.csv"
-# IN_FILE = f"t{T}-pri.csv"
+IN_FILE = f"t{T}-pri.csv"
 # IN_FILE = f"a.csv"
 
 OUT_FILE = f"{IN_FILE}.png"
@@ -26,6 +26,10 @@ data = dump[0] + dump[1]*1j
 # data = np.tile(data, 20); print("warning: use reference code")
 
 data = data[1000:11000]
+
+# 振幅平均が1になるように正規化
+data = data / np.mean(np.abs(data))
+
 # 円周上に正規化
 # data = data / np.abs(data)
 
@@ -48,7 +52,7 @@ Argument difference of primitive root code
 (t={T}, {RF_PARAM_DESC})
 """.strip())
 figconf(fig)
-fig.savefig(OUT_FILE)
+# fig.savefig(OUT_FILE)
 
 # sine wave
 # t=n-1から算出したt=nと、実際のt=nにおける受信符号の差
@@ -57,6 +61,8 @@ fig, ax = plt.subplots()
 pdata = algo.cmod(np.angle(data)[1:] - np.angle(data)[:-1] + np.pi*2/T)[:1000]
 print(f"average={np.mean(pdata)}[rad]")
 ax.plot(pdata, marker='o', markersize=3)
+ax.hlines([np.mean(pdata)], 0, 1000, "red", linestyles='dashed')
+ax.text(100, 0.01, f"{np.round(np.mean(pdata), 7)}", size=10, color='white')
 ax.grid(True, axis='y')
 ax.set_xlabel("time [1sec/sample_rate]")
 ax.set_ylabel("code[t+1] - code[t] + 2pi/T [rad]")
@@ -65,10 +71,10 @@ Argument difference of sine wave
 (t={T}, {RF_PARAM_DESC})
 """.strip())
 figconf(fig)
-fig.savefig(OUT_FILE)
+# fig.savefig(OUT_FILE)
 
 
-fig, axes = plt.subplots(nrows=2, ncols=2, squeeze=False)
+fig, axes = plt.subplots(nrows=1, ncols=3, squeeze=False)
 axes = np.ravel(axes)
 size = T
 for i, ax in enumerate(axes):
@@ -91,7 +97,7 @@ for i, ax in enumerate(axes):
     ax.grid(True, axis='both')
 
 fig.suptitle(f"""
-IQ plot of sine wave
+IQ plot of primitive root code (p,q={T},2)
 (t={T}, {RF_PARAM_DESC})
 """.strip())
 figconf(fig)
