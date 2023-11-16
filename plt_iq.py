@@ -3,10 +3,16 @@ import numpy as np
 from madi import code, algo
 from madi.static import *
 
-T = 53
+def splitmean(arr: np.ndarray, chunks: int):
+    arr_spl = []
+    for d in np.split(arr, chunks):
+        arr_spl.append(np.mean(d))
+    return np.array(arr_spl)
+
+T = 128
 
 IN_FILE = f"t{T}-sin.csv"
-IN_FILE = f"t{T}-pri.csv"
+# IN_FILE = f"t{T}-pri.csv"
 # IN_FILE = f"a.csv"
 
 OUT_FILE = f"{IN_FILE}.png"
@@ -35,7 +41,7 @@ data = data / np.mean(np.abs(data))
 
 # 回転補正
 LAG = -0.006043094190666974
-data = algo.fix_rf_rotate(data, LAG)
+# data = algo.fix_rf_rotate(data, LAG)
 
 # 原始根符号
 # t=n-1から算出したt=nと、実際のt=nにおける受信符号の差
@@ -44,9 +50,8 @@ Q = 2
 # pdata = 0となることが期待される
 pdata = algo.cmod(np.angle(data)[1:] - np.angle(data)[:-1]*Q)[:8000]
 print(f"primitive: var={np.var(pdata)}")
-pdata_spl = []
-for d in np.split(pdata, 100):
-    pdata_spl.append(np.mean(d))
+chunks = 50
+pdata_spl = splitmean(pdata, chunks)
 ax.plot(pdata_spl, marker='o', markersize=3)
 ax.grid(True, axis='y')
 ax.set_xlabel("time [1sec/sample_rate]")
@@ -62,19 +67,30 @@ figconf(fig)
 # t=n-1から算出したt=nと、実際のt=nにおける受信符号の差
 fig, ax = plt.subplots()
 # pdata = 0となることが期待される
-pdata = algo.cmod(np.angle(data)[1:] - np.angle(data)[:-1] - 2*np.pi/T)[:1000]
+pdata = algo.cmod(np.angle(data)[1:] - np.angle(data)[:-1] - 2*np.pi/T)[:8000]
 print(f"sin: avg={np.mean(pdata)}[rad]")
-ax.plot(pdata, marker='o', markersize=3)
-ax.hlines([np.mean(pdata)], 0, 1000, "red", linestyles='dashed')
-ax.text(100, 0.01, f"{np.round(np.mean(pdata), 7)}", size=10, color='white')
+chunks = 50
+pdata_spl = splitmean(pdata, chunks)
+ax.plot(pdata_spl, marker='o', markersize=3, label="raw")
+ax.set_ylim(-0.0042, 0.012)
+ax.hlines([np.mean(pdata_spl)], 0, chunks, "red", linestyles='dashed', lw=2)
+# ax.text(0, -0., f"avg={np.round(np.mean(pdata), 7)}[rad]", size=12, color='red')
 ax.grid(True, axis='y')
-ax.set_xlabel("time [1sec/sample_rate]")
-ax.set_ylabel("code[t+1] - code[t] + 2pi/T [rad]")
+ax.set_xlabel("chunks [1sec/sample_rate]")
+ax.set_ylabel(f"code[t+1] - code[t] - 2pi/{T} [rad]")
 fig.suptitle(f"""
 Argument difference of sine wave
 (t={T}, {RF_PARAM_DESC})
 """.strip())
+
+xdata = algo.fix_rf_rotate(data, LAG)
+xpdata = algo.cmod(np.angle(xdata)[1:] - np.angle(xdata)[:-1] - 2*np.pi/T)[:8000]
+xpdata_spl = splitmean(xpdata, chunks)
+ax.hlines([np.mean(xpdata_spl)], 0, chunks, "red", linestyles='dashed', lw=2)
+ax.plot(xpdata_spl, marker='o', markersize=3, label="fixed")
+
 figconf(fig)
+fig.legend()
 fig.savefig(OUT_FILE)
 
 
@@ -105,4 +121,4 @@ IQ plot of cyclic code
 (t={T}, {RF_PARAM_DESC})
 """.strip())
 figconf(fig)
-fig.savefig(OUT_FILE)
+# fig.savefig(OUT_FILE)
