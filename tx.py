@@ -25,7 +25,7 @@ for sdr in sdrs:
 
 leng = 128
 code = primitive_root_code(leng, 2, 2)
-# code = np.exp(1j*np.linspace(0, 2*np.pi, leng))
+code = np.exp(1j*np.linspace(0, 2*np.pi, leng))
 # code = np.ones(leng, dtype=np.complex)
 code = code * 1024 * 2
 

@@ -13,7 +13,7 @@ T = 128
 
 IN_FILE = f"t{T}-sin.csv"
 # IN_FILE = f"t{T}-pri.csv"
-# IN_FILE = f"a.csv"
+IN_FILE = f"a.csv"
 
 OUT_FILE = f"{IN_FILE}.png"
 
