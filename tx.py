@@ -23,7 +23,7 @@ for sdr in sdrs:
     sdr.tx_cyclic_buffer = True
     destroy(sdr)
 
-leng = 269
+leng = 128
 code = primitive_root_code(leng, 2, 2)
 # code = np.exp(1j*np.linspace(0, 2*np.pi, leng))
 # code = np.ones(leng, dtype=np.complex)

@@ -74,7 +74,6 @@ pdata_spl = splitmean(pdata, chunks)
 ax.plot(pdata_spl, marker='o', markersize=3, label="raw")
 ax.set_ylim(-0.0042, 0.012)
 ax.hlines([np.mean(pdata_spl)], 0, chunks, "red", linestyles='dashed', lw=2)
-# ax.text(0, -0., f"avg={np.round(np.mean(pdata), 7)}[rad]", size=12, color='red')
 ax.grid(True, axis='y')
 ax.set_xlabel("chunks [1sec/sample_rate]")
 ax.set_ylabel(f"code[t+1] - code[t] - 2pi/{T} [rad]")
@@ -82,21 +81,14 @@ fig.suptitle(f"""
 Argument difference of sine wave
 (t={T}, {RF_PARAM_DESC})
 """.strip())
-
-xdata = algo.fix_rf_rotate(data, LAG)
-xpdata = algo.cmod(np.angle(xdata)[1:] - np.angle(xdata)[:-1] - 2*np.pi/T)[:8000]
-xpdata_spl = splitmean(xpdata, chunks)
-ax.hlines([np.mean(xpdata_spl)], 0, chunks, "red", linestyles='dashed', lw=2)
-ax.plot(xpdata_spl, marker='o', markersize=3, label="fixed")
-
 figconf(fig)
 fig.legend()
-fig.savefig(OUT_FILE)
+# fig.savefig(OUT_FILE)
 
 
 fig, axes = plt.subplots(nrows=1, ncols=2, squeeze=False)
 axes = np.ravel(axes)
-size = T
+size = T*2
 for i, ax in enumerate(axes):
     start = (i+1)*(T+1000)
     pdata = data[start:start+size]
@@ -121,4 +113,4 @@ IQ plot of cyclic code
 (t={T}, {RF_PARAM_DESC})
 """.strip())
 figconf(fig)
-# fig.savefig(OUT_FILE)
+fig.savefig(OUT_FILE)
