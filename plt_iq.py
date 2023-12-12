@@ -11,9 +11,10 @@ def splitmean(arr: np.ndarray, chunks: int):
 
 T = 128
 
-IN_FILE = f"t{T}-sin.csv"
+IN_FILE = f"t{T}-sin-1127.csv"
+# IN_FILE = f"t{T}-ov-sin-1127.csv"
 # IN_FILE = f"t{T}-pri.csv"
-IN_FILE = f"a.csv"
+# IN_FILE = f"a.csv"
 
 OUT_FILE = f"{IN_FILE}.png"
 
@@ -88,7 +89,7 @@ fig.legend()
 
 fig, axes = plt.subplots(nrows=1, ncols=2, squeeze=False)
 axes = np.ravel(axes)
-size = T*2
+size = T
 for i, ax in enumerate(axes):
     start = (i+1)*(T+1000)
     pdata = data[start:start+size]
