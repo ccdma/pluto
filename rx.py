@@ -20,7 +20,7 @@ sdr = adi.Pluto(find_device("d87", DEVICES).uri_usb)
 
 sdr.rx_lo = DEFAULT_RX_LO
 sdr.rx_rf_bandwidth = DEFAULT_RX_BW
-sdr.sample_rate = DEFAULT_SAMPLE_RATE
+sdr.sample_rate = DEFAULT_SAMPLE_RATE*2
 sdr.rx_buffer_size = BUFFER_SIZE
 destroy(sdr)
 
